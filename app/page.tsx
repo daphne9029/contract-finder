@@ -76,13 +76,13 @@ export default function Home() {
         <h2 className="text-lg font-semibold text-gray-900 mb-3">選擇工作表</h2>
         <div className="flex flex-wrap gap-2">
           {[
-            { name: 'A', value: '平台協議合約A_OK' },
+            { name: 'A', value: '平台通路合約A_OK' },
             { name: 'B', value: '行銷合約B_OK' },
             { name: 'C', value: '供應商合約C_OK' },
             { name: 'D', value: '勞務合約D_OK' },
             { name: 'E', value: '系統合約E_OK' },
             { name: 'F', value: '總務合約F_OK' },
-            { name: 'H', value: 'Z其他合約H_OK' },
+            { name: 'H', value: 'H財務股務_OK' },
           ].map((sheet) => (
             <button
               key={sheet.value}
