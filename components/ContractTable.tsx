@@ -42,10 +42,10 @@ export default function ContractTable({
   )
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-x-auto">
-      <div className="inline-block w-full min-w-max">
+    <div className="bg-white rounded-lg shadow">
+      <div className="w-full">
         {/* 表頭 */}
-        <div className="grid gap-0 bg-gray-50 border-b" style={{ gridTemplateColumns: '350px 120px 100px 150px 80px' }}>
+        <div className="grid gap-0 bg-gray-50 border-b" style={{ gridTemplateColumns: '2fr 1fr 1fr 1.2fr 0.8fr' }}>
           <div className="px-4 py-3 border-r">
             <SortHeader label="合約名稱" field="name" />
           </div>
@@ -70,7 +70,7 @@ export default function ContractTable({
               {/* 資料行 */}
               <div
                 className="grid gap-0 border-b hover:bg-gray-50"
-                style={{ gridTemplateColumns: '350px 120px 100px 150px 80px' }}
+                style={{ gridTemplateColumns: '2fr 1fr 1fr 1.2fr 0.8fr' }}
               >
                 <div className="px-4 py-4 border-r font-medium text-gray-900 break-words">
                   {contract.合約名稱}
