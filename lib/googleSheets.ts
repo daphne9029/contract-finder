@@ -5,28 +5,27 @@ const SHEET_ID = process.env.GOOGLE_SHEET_ID || '1itd22cfFXkzydebKDMK3WT_ZeQWMU9
 
 // 初始化 Google Sheets API
 function getSheetsClient() {
-  console.log('getSheetsClient called')
-  console.log('GOOGLE_SERVICE_ACCOUNT_KEY exists:', !!process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
+  const keyString = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
 
-  const credentials = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
-    ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
-    : null
-
-  console.log('Credentials parsed:', !!credentials)
-
-  if (!credentials) {
+  if (!keyString) {
+    console.error('Error: GOOGLE_SERVICE_ACCOUNT_KEY is not set')
     throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY environment variable is not set')
   }
 
-  console.log('Creating GoogleAuth with project_id:', credentials.project_id)
+  try {
+    const credentials = JSON.parse(keyString)
+    console.log('Successfully parsed credentials for project:', credentials.project_id)
 
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-  })
+    const auth = new google.auth.GoogleAuth({
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+    })
 
-  console.log('GoogleAuth created successfully')
-  return google.sheets({ version: 'v4', auth })
+    return google.sheets({ version: 'v4', auth })
+  } catch (error) {
+    console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_KEY:', error)
+    throw error
+  }
 }
 
 export async function fetchContractsFromSheet(sheetName: string = '合約1'): Promise<Contract[]> {
@@ -68,7 +67,7 @@ export async function fetchContractsFromSheet(sheetName: string = '合約1'): Pr
         歸檔日期: getColumnValue('歸檔日期'),
         備註: getColumnValue('備註'),
         合約審核單編號: getColumnValue('合約審核單編號'),
-        合約編碼: getColumnValue('合約編碼'),
+        合約編碼: getColumnValue('合約編號'),
         性質: getColumnValue('性質'),
         檔案連結: '',
       }
