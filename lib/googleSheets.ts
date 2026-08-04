@@ -5,19 +5,27 @@ const SHEET_ID = process.env.GOOGLE_SHEET_ID || '1itd22cfFXkzydebKDMK3WT_ZeQWMU9
 
 // 初始化 Google Sheets API
 function getSheetsClient() {
+  console.log('getSheetsClient called')
+  console.log('GOOGLE_SERVICE_ACCOUNT_KEY exists:', !!process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
+
   const credentials = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
     ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
     : null
 
+  console.log('Credentials parsed:', !!credentials)
+
   if (!credentials) {
     throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY environment variable is not set')
   }
+
+  console.log('Creating GoogleAuth with project_id:', credentials.project_id)
 
   const auth = new google.auth.GoogleAuth({
     credentials,
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
   })
 
+  console.log('GoogleAuth created successfully')
   return google.sheets({ version: 'v4', auth })
 }
 
