@@ -27,7 +27,7 @@ export async function fetchContractsFromSheet(sheetName: string = '合約1'): Pr
 
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: `${sheetName}!A:K`,
+      range: `'${sheetName}'!A:K`,
     })
 
     const rows = response.data.values || []
