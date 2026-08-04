@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchContractsFromSheet, filterContracts, sortContracts } from '@/lib/googleSheets'
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 300 // 5分鐘快取
 
 export async function GET(request: NextRequest) {
