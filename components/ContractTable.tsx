@@ -42,21 +42,21 @@ export default function ContractTable({
   )
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <table className="w-full">
+    <div className="bg-white rounded-lg shadow overflow-x-auto">
+      <table className="w-full border-collapse">
         <thead className="bg-gray-50 border-b">
           <tr>
-            <th className="px-6 py-3 text-left">
+            <th className="px-4 py-3 text-left border-r min-w-[250px]">
               <SortHeader label="合約名稱" field="name" />
             </th>
-            <th className="px-6 py-3 text-left">
+            <th className="px-4 py-3 text-left border-r min-w-[120px]">
               <SortHeader label="用印日期" field="date" />
             </th>
-            <th className="px-6 py-3 text-left">
+            <th className="px-4 py-3 text-left border-r min-w-[100px]">
               <SortHeader label="申請人" field="applicant" />
             </th>
-            <th className="px-6 py-3 text-left">性質</th>
-            <th className="px-6 py-3 text-center">操作</th>
+            <th className="px-4 py-3 text-left border-r min-w-[120px]">性質</th>
+            <th className="px-4 py-3 text-center min-w-[80px]">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -70,28 +70,28 @@ export default function ContractTable({
             contracts.map((contract) => (
               <tbody key={contract.id}>
                 <tr className="border-b hover:bg-gray-50 cursor-pointer">
-                  <td className="px-6 py-4 font-medium text-gray-900">
+                  <td className="px-4 py-4 font-medium text-gray-900 border-r break-words max-w-[250px]">
                     {contract.合約名稱}
                   </td>
-                  <td className="px-6 py-4 text-gray-600">
+                  <td className="px-4 py-4 text-gray-600 border-r whitespace-nowrap">
                     {contract.用印日期}
                   </td>
-                  <td className="px-6 py-4 text-gray-600">
+                  <td className="px-4 py-4 text-gray-600 border-r whitespace-nowrap">
                     {contract.合約申請人}
                   </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                  <td className="px-4 py-4 border-r">
+                    <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm whitespace-nowrap">
                       {contract.性質}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  <td className="px-4 py-4 text-center">
                     <button
                       onClick={() =>
                         setExpandedId(
                           expandedId === contract.id ? null : contract.id
                         )
                       }
-                      className="text-blue-600 hover:text-blue-800 font-medium"
+                      className="text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
                     >
                       {expandedId === contract.id ? '隱藏' : '詳情'}
                     </button>
