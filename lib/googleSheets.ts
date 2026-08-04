@@ -23,12 +23,15 @@ function getSheetsClient() {
 
 export async function fetchContractsFromSheet(sheetName: string = '合約1'): Promise<Contract[]> {
   try {
+    console.log('Fetching sheet:', sheetName)
     const sheets = getSheetsClient()
+    console.log('Sheets client created')
 
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
       range: `'${sheetName}'!A:K`,
     })
+    console.log('API response:', response.data)
 
     const rows = response.data.values || []
     if (rows.length === 0) return []
