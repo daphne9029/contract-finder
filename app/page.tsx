@@ -76,24 +76,24 @@ export default function Home() {
         <h2 className="text-lg font-semibold text-gray-900 mb-3">選擇工作表</h2>
         <div className="flex flex-wrap gap-2">
           {[
-            { name: 'A', value: '平台通路合約A_OK' },
-            { name: 'B', value: '行銷合約B_OK' },
-            { name: 'C', value: '供應商合約C_OK' },
-            { name: 'D', value: '勞務合約D_OK' },
-            { name: 'E', value: '系統合約E_OK' },
-            { name: 'F', value: '總務合約F_OK' },
-            { name: 'H', value: 'H財務股務_OK' },
+            { name: 'A客戶/平台/通路合約', value: '平台通路合約A_OK' },
+            { name: 'B行銷合約', value: '行銷合約B_OK' },
+            { name: 'C加工/原料/產品供應', value: '供應商合約C_OK' },
+            { name: 'D勞務合約', value: '勞務合約D_OK' },
+            { name: 'E系統合約', value: '系統合約E_OK' },
+            { name: 'F總務類合約', value: '總務合約F_OK' },
+            { name: 'H財務股務', value: 'H財務股務_OK' },
           ].map((sheet) => (
             <button
               key={sheet.value}
               onClick={() => setSelectedSheet(sheet.value)}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`px-3 py-2 rounded-lg font-medium text-sm transition whitespace-nowrap ${
                 selectedSheet === sheet.value
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              合約{sheet.name}
+              {sheet.name}
             </button>
           ))}
         </div>
@@ -105,15 +105,6 @@ export default function Home() {
         <SearchBar value={filters.query} onChange={handleQueryChange} />
       </div>
 
-      {/* 標籤篩選 */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-3">按性質篩選</h2>
-        <FilterTags
-          categories={categories}
-          selectedCategory={filters.category}
-          onCategoryChange={handleCategoryChange}
-        />
-      </div>
 
       {/* 結果統計 */}
       <div className="text-sm text-gray-600">
