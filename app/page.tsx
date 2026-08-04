@@ -17,7 +17,7 @@ export default function Home() {
     sortOrder: 'desc',
   })
 
-  const [selectedSheet, setSelectedSheet] = useState('合約1')
+  const [selectedSheet, setSelectedSheet] = useState('平台協議合約A_OK')
   const [allContracts, setAllContracts] = useState<Contract[]>([])
   const [categories, setCategories] = useState<string[]>([])
 
@@ -74,18 +74,26 @@ export default function Home() {
       {/* 工作表選擇 */}
       <div className="bg-white rounded-lg shadow p-4">
         <h2 className="text-lg font-semibold text-gray-900 mb-3">選擇工作表</h2>
-        <div className="flex gap-2">
-          {['合約1', '合約2', '合約3'].map((sheet) => (
+        <div className="flex flex-wrap gap-2">
+          {[
+            { name: 'A', value: '平台協議合約A_OK' },
+            { name: 'B', value: '行銷合約B_OK' },
+            { name: 'C', value: '供應商合約C_OK' },
+            { name: 'D', value: '勞務合約D_OK' },
+            { name: 'E', value: '系統合約E_OK' },
+            { name: 'F', value: '總務合約F_OK' },
+            { name: 'H', value: 'Z其他合約H_OK' },
+          ].map((sheet) => (
             <button
-              key={sheet}
-              onClick={() => setSelectedSheet(sheet)}
+              key={sheet.value}
+              onClick={() => setSelectedSheet(sheet.value)}
               className={`px-4 py-2 rounded-lg font-medium transition ${
-                selectedSheet === sheet
+                selectedSheet === sheet.value
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              {sheet}
+              合約{sheet.name}
             </button>
           ))}
         </div>
