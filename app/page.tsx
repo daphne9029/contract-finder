@@ -17,7 +17,7 @@ export default function Home() {
     sortOrder: 'desc',
   })
 
-  const [selectedSheet, setSelectedSheet] = useState('平台協議合約A_OK')
+  const [selectedSheet, setSelectedSheet] = useState('平台通路合約A_OK')
   const [allContracts, setAllContracts] = useState<Contract[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const [selectedYears, setSelectedYears] = useState<string[]>([])

@@ -63,16 +63,20 @@ export async function fetchContractsFromSheet(sheetName: string = '合約1'): Pr
 
       const getColumnValue = (colName: string) => {
         const colIndex = headers.indexOf(colName)
-        return colIndex >= 0 && row[colIndex] ? String(row[colIndex]) : ''
+        return colIndex >= 0 && row[colIndex] ? String(row[colIndex]).trim() : ''
       }
 
       // 不同分頁的表頭命名不一致，有的叫「合約編號」有的叫「合約編碼」
       const 合約編碼 = getColumnValue('合約編號') || getColumnValue('合約編碼')
+      const 合約名稱 = getColumnValue('合約名稱')
+
+      // 跳過關鍵欄位都空白的列（格式列、預留列等）
+      if (!合約編碼 && !合約名稱) continue
 
       const contract: Contract = {
         id: `${sheetName}-${i}`,
         用印日期: getColumnValue('用印日期'),
-        合約名稱: getColumnValue('合約名稱'),
+        合約名稱,
         合約對象: getColumnValue('合約對象'),
         合約期間: getColumnValue('合約期間'),
         合約申請人: getColumnValue('合約申請人'),
