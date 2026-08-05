@@ -3,12 +3,19 @@
 import { Contract } from '@/lib/types'
 import { Download, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
+import ColumnFilterDropdown from './ColumnFilterDropdown'
 
 interface ContractTableProps {
   contracts: Contract[]
   onSort: (field: 'date' | 'name' | 'applicant' | 'code') => void
   sortBy: 'date' | 'name' | 'applicant' | 'code'
   sortOrder: 'asc' | 'desc'
+  yearOptions: string[]
+  selectedYears: string[]
+  onYearFilterChange: (years: string[]) => void
+  applicantOptions: string[]
+  selectedApplicants: string[]
+  onApplicantFilterChange: (applicants: string[]) => void
 }
 
 export default function ContractTable({
@@ -16,6 +23,12 @@ export default function ContractTable({
   onSort,
   sortBy,
   sortOrder,
+  yearOptions,
+  selectedYears,
+  onYearFilterChange,
+  applicantOptions,
+  selectedApplicants,
+  onApplicantFilterChange,
 }: ContractTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
@@ -52,11 +65,21 @@ export default function ContractTable({
           <div className="px-4 py-3 border-r">
             <SortHeader label="合約名稱" field="name" />
           </div>
-          <div className="px-4 py-3 border-r">
+          <div className="px-4 py-3 border-r flex items-center gap-1">
             <SortHeader label="用印日期" field="date" />
+            <ColumnFilterDropdown
+              options={yearOptions}
+              selected={selectedYears}
+              onChange={onYearFilterChange}
+            />
           </div>
-          <div className="px-4 py-3 border-r">
+          <div className="px-4 py-3 border-r flex items-center gap-1">
             <SortHeader label="申請人" field="applicant" />
+            <ColumnFilterDropdown
+              options={applicantOptions}
+              selected={selectedApplicants}
+              onChange={onApplicantFilterChange}
+            />
           </div>
           <div className="px-4 py-3 border-r">性質</div>
           <div className="px-4 py-3 text-center">操作</div>

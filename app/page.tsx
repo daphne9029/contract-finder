@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import SearchBar from '@/components/SearchBar'
 import FilterTags from '@/components/FilterTags'
@@ -20,6 +20,8 @@ export default function Home() {
   const [selectedSheet, setSelectedSheet] = useState('平台協議合約A_OK')
   const [allContracts, setAllContracts] = useState<Contract[]>([])
   const [categories, setCategories] = useState<string[]>([])
+  const [selectedYears, setSelectedYears] = useState<string[]>([])
+  const [selectedApplicants, setSelectedApplicants] = useState<string[]>([])
 
   // 構建 API URL
   const queryParams = new URLSearchParams({
@@ -49,6 +51,34 @@ export default function Home() {
       setAllContracts(data.data)
     }
   }, [data])
+
+  const yearOptions = useMemo(() => {
+    const years = allContracts
+      .map((c) => c.用印日期?.match(/^\d{4}/)?.[0])
+      .filter((y): y is string => !!y)
+    return [...new Set(years)].sort((a, b) => b.localeCompare(a))
+  }, [allContracts])
+
+  const applicantOptions = useMemo(() => {
+    const applicants = allContracts.map((c) => c.合約申請人).filter(Boolean)
+    return [...new Set(applicants)].sort((a, b) => a.localeCompare(b, 'zh-Hant'))
+  }, [allContracts])
+
+  const displayedContracts = useMemo(() => {
+    return allContracts.filter((c) => {
+      const year = c.用印日期?.match(/^\d{4}/)?.[0]
+      const matchesYear = selectedYears.length === 0 || (year && selectedYears.includes(year))
+      const matchesApplicant =
+        selectedApplicants.length === 0 || selectedApplicants.includes(c.合約申請人)
+      return matchesYear && matchesApplicant
+    })
+  }, [allContracts, selectedYears, selectedApplicants])
+
+  const handleSheetChange = (sheet: string) => {
+    setSelectedSheet(sheet)
+    setSelectedYears([])
+    setSelectedApplicants([])
+  }
 
   const handleQueryChange = (query: string) => {
     setFilters({ ...filters, query })
@@ -86,7 +116,7 @@ export default function Home() {
           ].map((sheet) => (
             <button
               key={sheet.value}
-              onClick={() => setSelectedSheet(sheet.value)}
+              onClick={() => handleSheetChange(sheet.value)}
               className={`px-3 py-2 rounded-lg font-medium text-sm transition whitespace-nowrap ${
                 selectedSheet === sheet.value
                   ? 'bg-blue-500 text-white'
@@ -114,7 +144,7 @@ export default function Home() {
           <span className="text-red-600">載入出錯</span>
         ) : (
           <span>
-            找到 <strong>{allContracts.length}</strong> 份合約
+            找到 <strong>{displayedContracts.length}</strong> 份合約
           </span>
         )}
       </div>
@@ -132,10 +162,16 @@ export default function Home() {
         </div>
       ) : (
         <ContractTable
-          contracts={allContracts}
+          contracts={displayedContracts}
           onSort={handleSort}
           sortBy={filters.sortBy}
           sortOrder={filters.sortOrder}
+          yearOptions={yearOptions}
+          selectedYears={selectedYears}
+          onYearFilterChange={setSelectedYears}
+          applicantOptions={applicantOptions}
+          selectedApplicants={selectedApplicants}
+          onApplicantFilterChange={setSelectedApplicants}
         />
       )}
     </div>
