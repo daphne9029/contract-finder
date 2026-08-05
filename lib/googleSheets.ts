@@ -66,7 +66,8 @@ export async function fetchContractsFromSheet(sheetName: string = '合約1'): Pr
         return colIndex >= 0 && row[colIndex] ? String(row[colIndex]) : ''
       }
 
-      const 合約編碼 = getColumnValue('合約編號')
+      // 不同分頁的表頭命名不一致，有的叫「合約編號」有的叫「合約編碼」
+      const 合約編碼 = getColumnValue('合約編號') || getColumnValue('合約編碼')
 
       const contract: Contract = {
         id: `${sheetName}-${i}`,
