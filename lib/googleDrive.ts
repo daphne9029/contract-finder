@@ -39,6 +39,9 @@ async function listAllFiles(
       fields: 'nextPageToken, files(id, name, webViewLink)',
       pageSize: 1000,
       pageToken,
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+      corpora: 'allDrives',
     })
     for (const f of res.data.files || []) {
       if (f.id && f.name) files.push({ id: f.id, name: f.name, webViewLink: f.webViewLink })
