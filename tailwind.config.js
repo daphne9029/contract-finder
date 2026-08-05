@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['var(--font-fraunces)', 'ui-serif', 'Georgia', 'serif'],
+        display: ['var(--font-poster)', 'ui-sans-serif', 'sans-serif'],
       },
     },
   },

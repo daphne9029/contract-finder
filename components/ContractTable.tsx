@@ -134,7 +134,7 @@ export default function ContractTable({
                 <div className="bg-gray-50 border-b p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <h4 className="font-serif font-medium text-stone-900 mb-2">
+                      <h4 className="font-display font-black text-black mb-2">
                         合約詳情
                       </h4>
                       <div className="space-y-2 text-sm">
@@ -171,7 +171,7 @@ export default function ContractTable({
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-serif font-medium text-stone-900 mb-2">
+                      <h4 className="font-display font-black text-black mb-2">
                         備註
                       </h4>
                       <p className="text-sm text-gray-600">

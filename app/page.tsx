@@ -103,7 +103,9 @@ export default function Home() {
     <div className="space-y-6">
       {/* 工作表選擇 */}
       <div className="bg-white rounded-lg border border-stone-200 p-4">
-        <h2 className="text-lg font-serif font-medium text-stone-900 mb-3">選擇工作表</h2>
+        <h2 className="text-lg font-display font-black text-black mb-3">
+          <span className="text-gray-400 font-medium mr-1">01.</span>選擇工作表
+        </h2>
         <div className="flex flex-wrap gap-2">
           {[
             { name: 'A客戶/平台/通路合約', value: '平台通路合約A_OK' },
@@ -131,7 +133,9 @@ export default function Home() {
 
       {/* 搜尋欄 */}
       <div className="bg-white rounded-lg border border-stone-200 p-4">
-        <h2 className="text-lg font-serif font-medium text-stone-900 mb-3">搜尋合約</h2>
+        <h2 className="text-lg font-display font-black text-black mb-3">
+          <span className="text-gray-400 font-medium mr-1">02.</span>搜尋合約
+        </h2>
         <SearchBar value={filters.query} onChange={handleQueryChange} />
       </div>
 
