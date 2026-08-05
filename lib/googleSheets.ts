@@ -1,5 +1,6 @@
 import { Contract } from './types'
 import { google } from 'googleapis'
+import { getContractPdfMap } from './googleDrive'
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID || '1itd22cfFXkzydebKDMK3WT_ZeQWMU9eQyDc5tmAtnUY'
 
@@ -43,6 +44,14 @@ export async function fetchContractsFromSheet(sheetName: string = '合約1'): Pr
     const rows = response.data.values || []
     if (rows.length === 0) return []
 
+    let pdfMap: Map<string, string>
+    try {
+      pdfMap = await getContractPdfMap()
+    } catch (error) {
+      console.error('Error fetching PDF map from Drive:', error)
+      pdfMap = new Map()
+    }
+
     // 第一行是 header
     const headers = rows[0]
     const contracts: Contract[] = []
@@ -57,6 +66,8 @@ export async function fetchContractsFromSheet(sheetName: string = '合約1'): Pr
         return colIndex >= 0 && row[colIndex] ? String(row[colIndex]) : ''
       }
 
+      const 合約編碼 = getColumnValue('合約編號')
+
       const contract: Contract = {
         id: `${sheetName}-${i}`,
         用印日期: getColumnValue('用印日期'),
@@ -67,9 +78,9 @@ export async function fetchContractsFromSheet(sheetName: string = '合約1'): Pr
         歸檔日期: getColumnValue('歸檔日期'),
         備註: getColumnValue('備註'),
         合約審核單編號: getColumnValue('合約審核單編號'),
-        合約編碼: getColumnValue('合約編號'),
+        合約編碼,
         性質: getColumnValue('性質'),
-        檔案連結: '',
+        檔案連結: pdfMap.get(合約編碼) || '',
       }
 
       contracts.push(contract)
