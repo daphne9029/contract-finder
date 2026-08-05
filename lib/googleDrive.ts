@@ -62,10 +62,13 @@ export async function getContractPdfMap(): Promise<Map<string, string>> {
     drive,
     "mimeType='application/pdf' and trashed=false"
   )
+  console.log(`Drive: found ${pdfFiles.length} PDF file(s) visible to service account`)
   for (const file of pdfFiles) {
     const match = file.name.match(CODE_PREFIX_RE)
     if (match && file.webViewLink) {
       map.set(match[1], file.webViewLink)
+    } else if (!match) {
+      console.log(`Drive: PDF name did not match code pattern: "${file.name}"`)
     }
   }
 
@@ -74,6 +77,7 @@ export async function getContractPdfMap(): Promise<Map<string, string>> {
     drive,
     "mimeType='application/vnd.google-apps.folder' and trashed=false"
   )
+  console.log(`Drive: found ${folders.length} folder(s) visible to service account`)
   for (const folder of folders) {
     const match = folder.name.match(CODE_PREFIX_RE)
     if (!match || map.has(match[1])) continue
@@ -87,6 +91,7 @@ export async function getContractPdfMap(): Promise<Map<string, string>> {
     }
   }
 
+  console.log(`Drive: built PDF map with ${map.size} contract code(s)`)
   cachedMap = map
   cachedAt = Date.now()
   return map
