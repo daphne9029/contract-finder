@@ -55,7 +55,7 @@ export default function ContractTable({
   )
 
   return (
-    <div className="bg-white rounded-lg shadow">
+    <div className="bg-white rounded-lg border border-stone-200">
       <div className="w-full">
         {/* 表頭 */}
         <div className="grid gap-0 bg-gray-50 border-b" style={{ gridTemplateColumns: '1fr 2fr 1fr 1fr 1.2fr 0.8fr' }}>
@@ -134,7 +134,7 @@ export default function ContractTable({
                 <div className="bg-gray-50 border-b p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">
+                      <h4 className="font-serif font-medium text-stone-900 mb-2">
                         合約詳情
                       </h4>
                       <div className="space-y-2 text-sm">
@@ -171,7 +171,7 @@ export default function ContractTable({
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">
+                      <h4 className="font-serif font-medium text-stone-900 mb-2">
                         備註
                       </h4>
                       <p className="text-sm text-gray-600">

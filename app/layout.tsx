@@ -1,5 +1,12 @@
 import type { Metadata } from 'next'
+import { Fraunces } from 'next/font/google'
 import './globals.css'
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-fraunces',
+})
 
 export const metadata: Metadata = {
   title: '合約檔案查詢系統',
@@ -12,16 +19,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-TW">
-      <body className="bg-gray-50">
-        <nav className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <h1 className="text-2xl font-bold text-gray-900">
-              📄 合約檔案查詢系統
+    <html lang="zh-TW" className={fraunces.variable}>
+      <body className="bg-stone-50">
+        <nav className="bg-white border-b border-stone-200">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <h1 className="text-2xl font-serif font-medium tracking-wide text-stone-900">
+              合約檔案查詢系統
             </h1>
           </div>
         </nav>
-        <main className="max-w-7xl mx-auto px-4 py-8">
+        <main className="max-w-7xl mx-auto px-4 py-10 space-y-8">
           {children}
         </main>
       </body>
