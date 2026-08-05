@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Fraunces } from 'next/font/google'
+import DecorativeBranch from '@/components/DecorativeBranch'
 import './globals.css'
 
 const fraunces = Fraunces({
@@ -20,8 +21,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-TW" className={fraunces.variable}>
-      <body className="bg-stone-50">
-        <nav className="bg-white border-b border-stone-200">
+      <body className="relative bg-[#faf9f5] overflow-x-hidden">
+        <DecorativeBranch className="pointer-events-none fixed -top-6 -left-10 w-56 h-72 text-stone-300 opacity-40 -z-10" />
+        <DecorativeBranch className="pointer-events-none fixed -bottom-10 -right-8 w-56 h-72 text-stone-300 opacity-40 -z-10 rotate-180" />
+        <nav className="bg-white/70 backdrop-blur-sm border-b border-stone-200">
           <div className="max-w-7xl mx-auto px-4 py-6">
             <h1 className="text-2xl font-serif font-medium tracking-wide text-stone-900">
               合約檔案查詢系統
