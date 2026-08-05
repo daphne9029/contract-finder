@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const sheetName = searchParams.get('sheet') || '合約1'
     const query = searchParams.get('q') || ''
     const category = searchParams.get('category') || ''
-    const sortBy = (searchParams.get('sort') as 'date' | 'name' | 'applicant') || 'date'
+    const sortBy = (searchParams.get('sort') as 'date' | 'name' | 'applicant' | 'code') || 'date'
     const sortOrder = (searchParams.get('order') as 'asc' | 'desc') || 'desc'
 
     // 從 Google Sheet 獲取合約資料

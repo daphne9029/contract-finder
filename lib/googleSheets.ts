@@ -116,7 +116,7 @@ export function filterContracts(
 // 排序合約
 export function sortContracts(
   contracts: Contract[],
-  sortBy: 'date' | 'name' | 'applicant',
+  sortBy: 'date' | 'name' | 'applicant' | 'code',
   sortOrder: 'asc' | 'desc' = 'desc'
 ): Contract[] {
   const sorted = [...contracts].sort((a, b) => {
@@ -135,6 +135,10 @@ export function sortContracts(
       case 'applicant':
         compareA = a.合約申請人
         compareB = b.合約申請人
+        break
+      case 'code':
+        compareA = a.合約編碼 || ''
+        compareB = b.合約編碼 || ''
         break
     }
 

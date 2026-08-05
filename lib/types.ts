@@ -16,6 +16,6 @@ export interface Contract {
 export interface SearchFilters {
   query: string
   category: string
-  sortBy: 'date' | 'name' | 'applicant'
+  sortBy: 'date' | 'name' | 'applicant' | 'code'
   sortOrder: 'asc' | 'desc'
 }

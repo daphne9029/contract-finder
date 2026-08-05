@@ -58,7 +58,7 @@ export default function Home() {
     setFilters({ ...filters, category })
   }
 
-  const handleSort = (field: 'date' | 'name' | 'applicant') => {
+  const handleSort = (field: 'date' | 'name' | 'applicant' | 'code') => {
     if (filters.sortBy === field) {
       setFilters({
         ...filters,

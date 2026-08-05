@@ -6,8 +6,8 @@ import { useState } from 'react'
 
 interface ContractTableProps {
   contracts: Contract[]
-  onSort: (field: 'date' | 'name' | 'applicant') => void
-  sortBy: 'date' | 'name' | 'applicant'
+  onSort: (field: 'date' | 'name' | 'applicant' | 'code') => void
+  sortBy: 'date' | 'name' | 'applicant' | 'code'
   sortOrder: 'asc' | 'desc'
 }
 
@@ -24,7 +24,7 @@ export default function ContractTable({
     field,
   }: {
     label: string
-    field: 'date' | 'name' | 'applicant'
+    field: 'date' | 'name' | 'applicant' | 'code'
   }) => (
     <button
       onClick={() => onSort(field)}
@@ -46,7 +46,9 @@ export default function ContractTable({
       <div className="w-full">
         {/* 表頭 */}
         <div className="grid gap-0 bg-gray-50 border-b" style={{ gridTemplateColumns: '1fr 2fr 1fr 1fr 1.2fr 0.8fr' }}>
-          <div className="px-4 py-3 border-r">合約編碼</div>
+          <div className="px-4 py-3 border-r">
+            <SortHeader label="合約編碼" field="code" />
+          </div>
           <div className="px-4 py-3 border-r">
             <SortHeader label="合約名稱" field="name" />
           </div>
