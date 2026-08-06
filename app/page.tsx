@@ -7,7 +7,66 @@ import FilterTags from '@/components/FilterTags'
 import ContractTable from '@/components/ContractTable'
 import { Contract, SearchFilters } from '@/lib/types'
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const SHEET_OPTIONS = [
+  { name: '全部', value: 'ALL' },
+  { name: 'A客戶/平台/通路合約', value: '平台通路合約A_OK' },
+  { name: 'B行銷合約', value: '行銷合約B_OK' },
+  { name: 'C加工/原料/產品供應', value: '供應商合約C_OK' },
+  { name: 'D勞務合約', value: '勞務合約D_OK' },
+  { name: 'E系統合約', value: '系統合約E_OK' },
+  { name: 'F總務類合約', value: '總務合約F_OK' },
+  { name: 'H財務股務', value: 'H財務股務_OK' },
+]
+
+const REAL_SHEETS = SHEET_OPTIONS.filter((s) => s.value !== 'ALL').map((s) => s.value)
+
+// 選「全部」時，把 7 個分頁的結果平行抓回來合併成一份清單
+const fetcher = async (url: string) => {
+  if (url.startsWith('__ALL__')) {
+    const query = url.slice('__ALL__'.length)
+    const results = await Promise.all(
+      REAL_SHEETS.map((sheet) =>
+        fetch(`/api/contracts?sheet=${encodeURIComponent(sheet)}${query}`).then((res) =>
+          res.json()
+        )
+      )
+    )
+    const merged = results.flatMap((r) => (r.success ? r.data : []))
+    return { success: true, data: merged, count: merged.length }
+  }
+  return fetch(url).then((res) => res.json())
+}
+
+function compareContracts(
+  a: Contract,
+  b: Contract,
+  sortBy: SearchFilters['sortBy'],
+  sortOrder: 'asc' | 'desc'
+) {
+  let compareA = ''
+  let compareB = ''
+  switch (sortBy) {
+    case 'date':
+      compareA = a.用印日期 || ''
+      compareB = b.用印日期 || ''
+      break
+    case 'name':
+      compareA = a.合約名稱
+      compareB = b.合約名稱
+      break
+    case 'applicant':
+      compareA = a.合約申請人
+      compareB = b.合約申請人
+      break
+    case 'code':
+      compareA = a.合約編碼 || ''
+      compareB = b.合約編碼 || ''
+      break
+  }
+  if (compareA < compareB) return sortOrder === 'asc' ? -1 : 1
+  if (compareA > compareB) return sortOrder === 'asc' ? 1 : -1
+  return 0
+}
 
 export default function Home() {
   const [filters, setFilters] = useState<SearchFilters>({
@@ -17,29 +76,29 @@ export default function Home() {
     sortOrder: 'desc',
   })
 
-  const [selectedSheet, setSelectedSheet] = useState('平台通路合約A_OK')
+  const [selectedSheet, setSelectedSheet] = useState('ALL')
   const [allContracts, setAllContracts] = useState<Contract[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const [selectedYears, setSelectedYears] = useState<string[]>([])
   const [selectedApplicants, setSelectedApplicants] = useState<string[]>([])
 
   // 構建 API URL
-  const queryParams = new URLSearchParams({
-    sheet: selectedSheet,
+  const sheetQuery = new URLSearchParams({
     q: filters.query,
     category: filters.category,
     sort: filters.sortBy,
     order: filters.sortOrder,
-  })
+  }).toString()
 
-  const { data, error, isLoading } = useSWR(
-    `/api/contracts?${queryParams.toString()}`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      dedupingInterval: 60000, // 1分鐘
-    }
-  )
+  const swrKey =
+    selectedSheet === 'ALL'
+      ? `__ALL__?${sheetQuery}`
+      : `/api/contracts?sheet=${encodeURIComponent(selectedSheet)}&${sheetQuery}`
+
+  const { data, error, isLoading } = useSWR(swrKey, fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000, // 1分鐘
+  })
 
   // 抽取所有的性質分類
   useEffect(() => {
@@ -65,14 +124,16 @@ export default function Home() {
   }, [allContracts])
 
   const displayedContracts = useMemo(() => {
-    return allContracts.filter((c) => {
-      const year = c.用印日期?.match(/^\d{4}/)?.[0]
-      const matchesYear = selectedYears.length === 0 || (year && selectedYears.includes(year))
-      const matchesApplicant =
-        selectedApplicants.length === 0 || selectedApplicants.includes(c.合約申請人)
-      return matchesYear && matchesApplicant
-    })
-  }, [allContracts, selectedYears, selectedApplicants])
+    return allContracts
+      .filter((c) => {
+        const year = c.用印日期?.match(/^\d{4}/)?.[0]
+        const matchesYear = selectedYears.length === 0 || (year && selectedYears.includes(year))
+        const matchesApplicant =
+          selectedApplicants.length === 0 || selectedApplicants.includes(c.合約申請人)
+        return matchesYear && matchesApplicant
+      })
+      .sort((a, b) => compareContracts(a, b, filters.sortBy, filters.sortOrder))
+  }, [allContracts, selectedYears, selectedApplicants, filters.sortBy, filters.sortOrder])
 
   const handleSheetChange = (sheet: string) => {
     setSelectedSheet(sheet)
@@ -107,15 +168,7 @@ export default function Home() {
           <span className="text-gray-400 font-medium mr-1">01.</span>選擇工作表
         </h2>
         <div className="flex flex-wrap gap-2">
-          {[
-            { name: 'A客戶/平台/通路合約', value: '平台通路合約A_OK' },
-            { name: 'B行銷合約', value: '行銷合約B_OK' },
-            { name: 'C加工/原料/產品供應', value: '供應商合約C_OK' },
-            { name: 'D勞務合約', value: '勞務合約D_OK' },
-            { name: 'E系統合約', value: '系統合約E_OK' },
-            { name: 'F總務類合約', value: '總務合約F_OK' },
-            { name: 'H財務股務', value: 'H財務股務_OK' },
-          ].map((sheet) => (
+          {SHEET_OPTIONS.map((sheet) => (
             <button
               key={sheet.value}
               onClick={() => handleSheetChange(sheet.value)}
