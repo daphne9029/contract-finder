@@ -58,13 +58,14 @@ export default function ContractTable({
     <div className="bg-white rounded-lg border border-stone-200">
       <div className="w-full">
         {/* 表頭 */}
-        <div className="grid gap-0 bg-gray-50 border-b" style={{ gridTemplateColumns: '1fr 2fr 1fr 1fr 1.2fr 0.8fr' }}>
+        <div className="grid gap-0 bg-gray-50 border-b" style={{ gridTemplateColumns: '1fr 1.5fr 1.5fr 1fr 1fr 1.2fr 0.8fr' }}>
           <div className="px-4 py-3 border-r">
             <SortHeader label="合約編碼" field="code" />
           </div>
           <div className="px-4 py-3 border-r">
             <SortHeader label="合約名稱" field="name" />
           </div>
+          <div className="px-4 py-3 border-r">合約對象</div>
           <div className="px-4 py-3 border-r flex items-center gap-1">
             <SortHeader label="用印日期" field="date" />
             <ColumnFilterDropdown
@@ -96,13 +97,16 @@ export default function ContractTable({
               {/* 資料行 */}
               <div
                 className="grid gap-0 border-b hover:bg-gray-50"
-                style={{ gridTemplateColumns: '1fr 2fr 1fr 1fr 1.2fr 0.8fr' }}
+                style={{ gridTemplateColumns: '1fr 1.5fr 1.5fr 1fr 1fr 1.2fr 0.8fr' }}
               >
                 <div className="px-4 py-4 border-r text-gray-600 whitespace-nowrap">
                   {contract.合約編碼}
                 </div>
                 <div className="px-4 py-4 border-r font-medium text-gray-900 break-words">
                   {contract.合約名稱}
+                </div>
+                <div className="px-4 py-4 border-r text-gray-600 break-words">
+                  {contract.合約對象}
                 </div>
                 <div className="px-4 py-4 border-r text-gray-600 whitespace-nowrap">
                   {contract.用印日期}
