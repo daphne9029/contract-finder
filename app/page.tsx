@@ -21,20 +21,31 @@ const SHEET_OPTIONS = [
 const REAL_SHEETS = SHEET_OPTIONS.filter((s) => s.value !== 'ALL').map((s) => s.value)
 
 // 選「全部」時，把 7 個分頁的結果平行抓回來合併成一份清單
+// 注意：搜尋/排序/篩選都不能放進這個 URL 觸發重新抓取——
+// Google Sheets API 有每分鐘讀取次數配額，全部模式一次要打 7 個分頁，
+// 打字每按一下都重抓會很快就把配額用光。
 const fetcher = async (url: string) => {
-  if (url.startsWith('__ALL__')) {
-    const query = url.slice('__ALL__'.length)
+  if (url === '__ALL__') {
     const results = await Promise.all(
       REAL_SHEETS.map((sheet) =>
-        fetch(`/api/contracts?sheet=${encodeURIComponent(sheet)}${query}`).then((res) =>
-          res.json()
-        )
+        fetch(`/api/contracts?sheet=${encodeURIComponent(sheet)}`).then((res) => res.json())
       )
     )
     const merged = results.flatMap((r) => (r.success ? r.data : []))
     return { success: true, data: merged, count: merged.length }
   }
   return fetch(url).then((res) => res.json())
+}
+
+function matchesQuery(c: Contract, query: string) {
+  if (!query) return true
+  const q = query.toLowerCase()
+  return (
+    c.合約名稱.toLowerCase().includes(q) ||
+    c.合約對象.toLowerCase().includes(q) ||
+    c.合約申請人.toLowerCase().includes(q) ||
+    c.合約編碼.toLowerCase().includes(q)
+  )
 }
 
 function compareContracts(
@@ -82,18 +93,9 @@ export default function Home() {
   const [selectedYears, setSelectedYears] = useState<string[]>([])
   const [selectedApplicants, setSelectedApplicants] = useState<string[]>([])
 
-  // 構建 API URL
-  const sheetQuery = new URLSearchParams({
-    q: filters.query,
-    category: filters.category,
-    sort: filters.sortBy,
-    order: filters.sortOrder,
-  }).toString()
-
+  // 只有切換分頁才需要重新打 API，搜尋/排序/篩選都在前端處理
   const swrKey =
-    selectedSheet === 'ALL'
-      ? `__ALL__?${sheetQuery}`
-      : `/api/contracts?sheet=${encodeURIComponent(selectedSheet)}&${sheetQuery}`
+    selectedSheet === 'ALL' ? '__ALL__' : `/api/contracts?sheet=${encodeURIComponent(selectedSheet)}`
 
   const { data, error, isLoading } = useSWR(swrKey, fetcher, {
     revalidateOnFocus: false,
@@ -130,10 +132,17 @@ export default function Home() {
         const matchesYear = selectedYears.length === 0 || (year && selectedYears.includes(year))
         const matchesApplicant =
           selectedApplicants.length === 0 || selectedApplicants.includes(c.合約申請人)
-        return matchesYear && matchesApplicant
+        return matchesYear && matchesApplicant && matchesQuery(c, filters.query)
       })
       .sort((a, b) => compareContracts(a, b, filters.sortBy, filters.sortOrder))
-  }, [allContracts, selectedYears, selectedApplicants, filters.sortBy, filters.sortOrder])
+  }, [
+    allContracts,
+    selectedYears,
+    selectedApplicants,
+    filters.query,
+    filters.sortBy,
+    filters.sortOrder,
+  ])
 
   const handleSheetChange = (sheet: string) => {
     setSelectedSheet(sheet)
