@@ -1,7 +1,9 @@
 import { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
-const ALLOWED_DOMAIN = 'tsagroup.com.tw'
+// 先只開放給這個信箱，之後要開放給全公司網域時，
+// 把這裡換回檢查 profile.hd === 'tsagroup.com.tw' 即可
+const ALLOWED_EMAILS = ['daphneyou@tsagroup.com.tw']
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,8 +14,8 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ profile }) {
-      const hd = (profile as { hd?: string } | undefined)?.hd
-      return hd === ALLOWED_DOMAIN
+      const email = (profile as { email?: string } | undefined)?.email
+      return !!email && ALLOWED_EMAILS.includes(email)
     },
   },
   pages: {
